@@ -1,0 +1,17 @@
+{
+  "name": "comedy-cellar-electron",
+  "version": "1.0.0",
+  "description": "Comedy Cellar Shows Electron App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^13.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}

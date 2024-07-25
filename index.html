@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comedy Cellar Shows</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+        .show-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .weekend-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #1a1a1a;
+        }
+        .day-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .day-group h2 {
+            margin: 0;
+            padding: 15px;
+            background-color: #2c3e50;  /* Unified background color for both headers */
+            border-radius: 8px;
+            font-size: 1.4em;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+        }
+        .friday-group h2 {
+            border-left: 5px solid #3498db;  /* Blue accent for Friday */
+        }
+        .saturday-group h2 {
+            border-left: 5px solid #2ecc71;  /* Green accent for Saturday */
+        }
+        .show-item {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .show-item.available::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #66ff99;
+            border-radius: 6px;
+            animation: pulseBorder 2s infinite;
+        }
+        .show-item.booked {
+            background-color: #3a2a2a;
+            border: 1px solid #ff4d4d;
+        }
+        @keyframes pulseBorder {
+            0%, 100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        .show-header {
+            color: #4da6ff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .show-details {
+            display: flex;
+            justify-content: space-between;
+        }
+        .show-details > div {
+            display: flex;
+            flex-direction: column;
+        }
+        .highlight {
+            color: #ff9966;
+        }
+        .available-highlight {
+            color: #66ff99;
+        }
+        .booked-highlight {
+            color: #ff4d4d;
+        }
+    </style>
+</head>
+<body>
+<h1>Comedy Cellar Shows</h1>
+<div id="content">
+    <div class="show-list" id="showList"></div>
+</div>
+<script src="renderer.js"></script>
+</body>
+</html>
