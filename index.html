@@ -12,17 +12,39 @@
             margin: 0;
             padding: 20px;
         }
+        #header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #121212;
+            border-bottom: 1px solid #333;
+            padding: 10px 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
         h1 {
-            text-align: center;
-            margin-bottom: 30px;
+            margin: 0;
             color: #ffffff;
+            font-size: 1.5em;
+        }
+        #countdown {
+            font-size: 1.2em;
+            color: #4CAF50;
+            margin-right: 30px; /* Add more margin to the right side */
         }
         .show-list {
             display: flex;
             flex-direction: column;
             gap: 30px;
             max-width: 800px;
-            margin: 0 auto;
+            margin: 70px auto 0; /* Adjust margin to avoid overlap with fixed header */
+        }
+        .show-list.dimmed {
+            opacity: 0.2;
+            transition: opacity 1s;
         }
         .weekend-group {
             display: flex;
@@ -110,10 +132,11 @@
     </style>
 </head>
 <body>
-<h1>Comedy Cellar Shows</h1>
-<div id="content">
-    <div class="show-list" id="showList"></div>
+<div id="header">
+    <h1>Comedy Cellar Shows</h1>
+    <div id="countdown">Next refresh in: <span id="timer">60</span> seconds</div>
 </div>
+<div class="show-list" id="showList"></div>
 <script src="renderer.js"></script>
 </body>
 </html>
