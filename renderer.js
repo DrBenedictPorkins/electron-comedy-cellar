@@ -1,3 +1,5 @@
+let currentShows = [];
+
 function getUpcomingWeekends(numberOfWeeks) {
     const weekends = [];
     const currentDate = new Date();
@@ -44,7 +46,6 @@ function convertTo12Hour(time24) {
     return `${hours12}:${minutes} ${period}`;
 }
 
-
 function formatShowDate(date) {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(undefined, options);
@@ -53,7 +54,7 @@ function formatShowDate(date) {
 function createShowItem(show, date) {
     const showItem = document.createElement('div');
     showItem.className = 'show-item';
-    showItem.setAttribute('data-id', show.id); // Add this line to set a data-id attribute
+    showItem.setAttribute('data-id', show.id);
 
     if (show.totalGuests < show.max) {
         showItem.classList.add('available');
@@ -96,7 +97,7 @@ async function fetchAndDisplayShows(date, showList, dayGroup) {
             showDate.setHours(parseInt(hours), parseInt(minutes));
 
             const showItem = createShowItem(show, showDate);
-            showItem.setAttribute('data-id', show.id); // Add this line to set a data-id attribute
+            showItem.setAttribute('data-id', show.id);
             dayGroup.appendChild(showItem);
         });
 
@@ -107,11 +108,11 @@ async function fetchAndDisplayShows(date, showList, dayGroup) {
     }
 }
 
-
 async function displayShows() {
-    const numberOfWeeks = 4;
+    const numberOfWeeks = 12;
     const weekends = getUpcomingWeekends(numberOfWeeks);
     const showList = document.getElementById('showList');
+    showList.innerHTML = ''; // Clear the list before repopulating
     let firstAvailableSlot = null;
 
     for (const weekend of weekends) {
@@ -155,7 +156,67 @@ async function displayShows() {
     }
 }
 
+function isDataChanged(oldData, newData) {
+    if (oldData.length !== newData.length) return true;
+
+    for (let i = 0; i < oldData.length; i++) {
+        if (oldData[i].id !== newData[i].id ||
+          oldData[i].totalGuests !== newData[i].totalGuests) {
+            return true;
+        }
+    }
+    return false;
+}
+
+async function checkForUpdates() {
+    const numberOfWeeks = 12;
+    const weekends = getUpcomingWeekends(numberOfWeeks);
+    let newShows = [];
+
+    for (const weekend of weekends) {
+        const fridayShows = await fetchAndDisplayShows(weekend.friday, null, document.createElement('div'));
+        const saturdayShows = await fetchAndDisplayShows(weekend.saturday, null, document.createElement('div'));
+        newShows = [...newShows, ...fridayShows, ...saturdayShows];
+    }
+
+    if (isDataChanged(currentShows, newShows)) {
+        displayShows();
+        currentShows = newShows;
+    } else {
+        const showList = document.getElementById('showList');
+        showList.classList.remove('dimmed');
+    }
+}
+
+function startCountdown(duration) {
+    let timer = duration;
+    const countdownElement = document.getElementById('timer');
+
+    const countdownInterval = setInterval(() => {
+        countdownElement.textContent = timer;
+        if (--timer < 0) {
+            clearInterval(countdownInterval);
+            dimScheduleBlocks();
+            checkForUpdates().then(() => {
+                startCountdown(duration); // Restart the countdown after updating
+                const showList = document.getElementById('showList');
+                showList.classList.remove('dimmed'); // Remove the dimmed class after refreshing
+            });
+        }
+    }, 1000);
+
+    return countdownInterval;
+}
+
+function dimScheduleBlocks() {
+    const showList = document.getElementById('showList');
+    showList.classList.add('dimmed');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     displayShows();
+    currentShows = [];
+
+    const refreshInterval = 60; // Refresh interval in seconds
+    startCountdown(refreshInterval);
 });
